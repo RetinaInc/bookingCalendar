@@ -191,12 +191,13 @@ $(document).ready(function() {
 
 
     var form ={
+
     	//vars
-    	mode : "booking",
-    	state: "1",
-    	arrTime:"00:00",
-    	depTime:"01:00",
-    	steppedUpTime:"01:00",
+    	mode : "booking", //current mode, other could be e.g 'join event'
+    	state: "1", //default state(view) of form
+    	arrTime:"00:00", //arrival time - selectable on calendar - also displayed on form
+    	depTime:"01:00", //departure time - selectable on form 
+    	steppedUpTime:"01:00", //arr time + step -initial time of departure timepicker
 
 
     	//methods
