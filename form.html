@@ -90,29 +90,81 @@
 
 $(document).ready(function() {
 
-	//Ajax vars
+	//Ajax JSON
+	var bookingJSON={
+		"firstSlot": "9:00",
+		"lastSlot": "20:00",
+		"number": 123,
+		"string": "Hello World",
+		"eventsArray": [
+		{
+		  "title": "Globalsoft Booking",
+		  "start": "1423994400",
+		  "end": "1424012400"
+		},
+		{
+		  "title": "Opium Works Booking",
+		  "start": "1422784800",
+		  "end": "1422788400"
+		},
+		{
+		  "title": "Private Booking",
+		  "start": "1448953200",
+		  "end": "1448971200"
+		},
+		{
+		  "title": "Private Booking",
+		  "start": "1423994400",
+		  "end": "1424005200"
+		}
+		],
+		"availableRooms": [
+		{
+		  "roomId": "room-55",
+		  "roomName": "Aphrodite Room",
+		  "roomDescription": "Lorem, ipsum solor dit amet,dit amet",
+		  "roomImg": "http://gold-estate.lv/wp-content/uploads/2013/09/Modern-Interior-Design-7042.jpg",
+		  "roomCapacity": 69,
+		  "pricePerHour":39.00,
+		  "minSlotHours" : 4
+		},
+		{
+		  "roomId": "room-12",
+		  "roomName": "Kostas Room",
+		  "roomImg": "http://trinityriver.audubon.org/sites/default/files/photos/conference_room.jpg",
+		  "roomDescription": "Lorem, ipsum solor dit amet,dit amet, ",
+		  "roomCapacity": 124,
+		  "pricePerHour":39.00,
+		  "minSlotHours" : 4
+		}
+		],
+		"calendarOptions": {
+		"stepHour": 1,
+		"c": "d",
+		"e": "f"
+		}
+	}
 
-	var stepHour = 1;
-	var firstSlot = "9:00";
-	var lastSlot = "20:00";
+	var stepHour = bookingJSON.calendarOptions.stepHour;
+	var firstSlot = bookingJSON.firstSlot;
+	var lastSlot = bookingJSON.lastSlot;
+	var eventsArray = parseEventsUnix(bookingJSON.eventsArray);
+	var availableRooms = bookingJSON.availableRooms;
 
 
-
+	//DOM handles
 	var stepForm = $("#stepForm");
 	var allStates = $(".state");
 	var nextBtn = $("#nextBtn");
 	var formErrMsg = $("#formErrMsg");
-
 	var headingDateLbl = $("#headingDateLbl");
 	var headingArrTimeTxt = $("#headingArrTimeTxt");
 	var headingDepTimeTxt = $("#headingDepTimeTxt");
-
 	var formSpinner = document.getElementById('formSpinner');//spin.js does not accept jQuery, using vanilla instead
-
 	var timepicker1 = $("#timepicker1");
 	var timepicker2 = $("#timepicker2");
-
 	var roomContainer = $("#roomContainer");
+
 
 
     var date = new Date();
@@ -140,52 +192,13 @@ $(document).ready(function() {
 		  left: '50%' 
 	};
 
-	var eventsArray = [
-			        {
-			            title  : 'Booked',
-			            start  : '2015-01-01'
-			        },
-			        {
-			            title  : 'Aphrodite',
-			            start  : '2015-01-09T11:30:00',
-			            end    : '2015-01-09T12:30:00'
-			        },
-			        {
-			            title  : 'Fedonas',
-			            start  : '2015-01-09T11:30:00',
-			            end    : '2015-01-09T12:30:00'
-			        },
-			        {
-			            title  : 'Booked',
-			            start  : '2015-01-29T12:30:00',
-			            allDay : false // will make the time show
-			        }
-		    	];
-
-
-	var availableRooms=[
-		{
-			roomId:"room-55",
-			roomName:"Aphrodite Room",
-			roomDescription:"Lorem, ipsum solor dit amet,dit amet",
-			roomImg:"http://gold-estate.lv/wp-content/uploads/2013/09/Modern-Interior-Design-7042.jpg",
-			roomCapacity:69
-		},
-		{	
-			roomId:"room-12",
-			roomName:"Kostas Room",
-			roomImg:"http://trinityriver.audubon.org/sites/default/files/photos/conference_room.jpg",
-			roomDescription:"Lorem, ipsum solor dit amet,dit amet, ",
-			roomCapacity:124
-		}
-	]
-
     $('#calendar').fullCalendar({
         header: {
             left: 'prev,next today',
             center: 'title',
             right: 'month,agendaWeek,agendaDay'
         },
+        ignoreTimezone:true,
         selectOverlap:false,
         allDaySlot:false,
         minTime: firstSlot,
@@ -196,8 +209,7 @@ $(document).ready(function() {
         events: eventsArray,
         dayClick: function(date) {
                 $('#calendar').fullCalendar('gotoDate', date);
-                $('#calendar').fullCalendar('changeView', 'agendaDay');
-        
+                $('#calendar').fullCalendar('changeView', 'agendaDay');        
         },
         timeClick: function(){
         	alert("clicktime")
@@ -247,8 +259,8 @@ $(document).ready(function() {
     	//vars
     	mode : "booking", //current mode, other could be e.g 'join event'
     	state: "1", //default state(view) of form
-    	arrTime:"00:00", //arrival time - selectable on calendar - also displayed on form
-    	depTime:"01:00", //departure time - selectable on form 
+    	arrDate:"00:00", //arrival time - selectable on calendar - also displayed on form
+    	depDate:"01:00", //departure time - selectable on form 
     	steppedUpTime:"01:00", //arr time + step -initial time of departure timepicker
     	selectedRoomId:"0", //currently selected room
     	errHideDelay:3000, //time to show err msg before hiding
@@ -297,11 +309,13 @@ $(document).ready(function() {
 
 
         	startTimeFormatted = startDate.format('H:mm');
-    		this.arrTime = startTimeFormatted;
-  			$(timepicker1).timepicker('setTime', this.arrTime);
+  			$(timepicker1).timepicker('setTime', startTimeFormatted);
 
   			this.steppedUpTime =  endDate.format('H:mm');
   			$(timepicker2).timepicker('setTime',this.steppedUpTime);
+
+  			this.arrDate = startDate.format('YYYY-MM-DD');
+  			this.depDate = endDate.format('YYYY-MM-DD');
 
   			$(headingDateLbl).text(endDate.format('MMMM Do YYYY'));
   			$(headingArrTimeTxt).text(startDate.format('H:mm'));
@@ -315,16 +329,22 @@ $(document).ready(function() {
     			$(".state"+form.state).fadeIn(100);
     		});
 
-			/*switch(this.state) {
-			    case n:
-			        //code block
+			switch(this.state) {
+			    case 3:
+
+			        var finalArrTime = $(timepicker1).val();
+			        var finalDepTime = $(timepicker2).val();
+
+			        this.arrDate = moment(this.arrDate+'T'+finalArrTime).utc().format('X'); //final save of arrTime in unix time
+			        this.depDate = moment(this.depDate+'T'+finalDepTime).utc().format('X'); //final save of depTime in unix time
+
 			        break;
-			    case n:
-			       // code block
+			    case 4:
+			       console.log(JSON.stringify(form));
 			        break;
 			    default:
-			        //default code block
-			}*/
+			        console.log('nextState form. method defaulted switch case')
+			}
     	},
 
     	setSelection: function(unix){
@@ -425,6 +445,16 @@ $(document).ready(function() {
 
 
 	});
+
+	//parses an event array - transforms unix timestamps to datestrings for start/end times
+	function parseEventsUnix(eventsArr){
+		for (var i = 0; i < eventsArr.length; i++) {
+			if (typeof eventsArr[i].start!=='undefined')
+				eventsArr[i].start = moment.unix(eventsArr[i].start).utc().format();
+				eventsArr[i].end = moment.unix(eventsArr[i].end).utc().format();
+		};
+		return eventsArr;
+	}
 
 	function disableNext(bool){
 		if (bool){
