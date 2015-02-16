@@ -14,6 +14,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.2/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.2.7/fullcalendar.js"></script>
+    <script src="libraries/spin.min.js"></script>
 
     <script src="libraries/bootstrap-timepicker.min.js"></script>
 
@@ -25,10 +26,13 @@
         <div id="loginFormWrapper">
         	<div class="formHeading">
         		<div class='cardTitle'>Book Room "Aphrodite"</div>
-        		<span class="forDate">21/12/2016, 11:00 - 13:00</span>
+        		<span class="forDate"><span id="headingDateLbl">21/12/2016</span>, <span id="headingArrTimeTxt">11:00</span> - <span id="headingDepTimeTxt">13:00</span></span>
         	</div>
+        	<div id="formSpinner"></div>
+	       	<div id="formErrMsg">An error occured!</div>
         	<div class='state state1'>
-					<p>&nbsp;&nbsp;A list of the all rooms should go here </p>
+        		<div id="roomContainer">
+				</div>
         	</div>
         	<div class='state state2'>
         		<div id="nameInputWrapper" class="inputWrapper">
@@ -62,7 +66,6 @@
 	                        <div class="panel-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</div>
 	                    </div>
 	                </div>
-	                <div id="loginErrorMsg" class="errorMsg">An error occured!</div>
 	                <hr>
 	                <div class="priceBox">
 	                	<span class="priceLbl">Price:</span><span class="priceTxt"><span style='font-weight:lighter;'>&euro;&nbsp;</span>39.90</span>
@@ -98,15 +101,44 @@ $(document).ready(function() {
 	var stepForm = $("#stepForm");
 	var allStates = $(".state");
 	var nextBtn = $("#nextBtn");
+	var formErrMsg = $("#formErrMsg");
+
+	var headingDateLbl = $("#headingDateLbl");
+	var headingArrTimeTxt = $("#headingArrTimeTxt");
+	var headingDepTimeTxt = $("#headingDepTimeTxt");
+
+	var formSpinner = document.getElementById('formSpinner');//spin.js does not accept jQuery, using vanilla instead
 
 	var timepicker1 = $("#timepicker1");
 	var timepicker2 = $("#timepicker2");
+
+	var roomContainer = $("#roomContainer");
 
 
     var date = new Date();
     var d = date.getDate();
     var m = date.getMonth();
     var y = date.getFullYear();
+
+
+	var spinnerOpts = {
+		  lines: 20, 
+		  length: 0, 
+		  width: 5, 
+		  radius: 15,
+		  corners: 1, 
+		  rotate: 0, 
+		  direction: 1, 
+		  color: '#fff', 
+		  speed: 3, 
+		  trail: 0, 
+		  shadow: false, 
+		  hwaccel: true, 
+		  className: 'spinner', 
+		  zIndex: 2e9, 
+		  top: '50%', 
+		  left: '50%' 
+	};
 
 	var eventsArray = [
 			        {
@@ -130,12 +162,31 @@ $(document).ready(function() {
 			        }
 		    	];
 
+
+	var availableRooms=[
+		{
+			roomId:"room-55",
+			roomName:"Aphrodite Room",
+			roomDescription:"Lorem, ipsum solor dit amet,dit amet",
+			roomImg:"http://gold-estate.lv/wp-content/uploads/2013/09/Modern-Interior-Design-7042.jpg",
+			roomCapacity:69
+		},
+		{	
+			roomId:"room-12",
+			roomName:"Kostas Room",
+			roomImg:"http://trinityriver.audubon.org/sites/default/files/photos/conference_room.jpg",
+			roomDescription:"Lorem, ipsum solor dit amet,dit amet, ",
+			roomCapacity:124
+		}
+	]
+
     $('#calendar').fullCalendar({
         header: {
             left: 'prev,next today',
             center: 'title',
             right: 'month,agendaWeek,agendaDay'
         },
+        selectOverlap:false,
         allDaySlot:false,
         minTime: firstSlot,
         maxTime: lastSlot,
@@ -155,8 +206,9 @@ $(document).ready(function() {
         	console.log(view.name)
         	if(view.name==="agendaDay"){
         		$("#calendar").css('opacity','0.3');
-        		var date = moment(start,'X');
-            	form.show(null,date);
+        		var startDate = moment(start,'X');
+        		var endDate = moment(end,'X');
+            	form.show(null,startDate,endDate);
         	}
         }
     });
@@ -198,9 +250,19 @@ $(document).ready(function() {
     	arrTime:"00:00", //arrival time - selectable on calendar - also displayed on form
     	depTime:"01:00", //departure time - selectable on form 
     	steppedUpTime:"01:00", //arr time + step -initial time of departure timepicker
+    	selectedRoomId:"0", //currently selected room
+    	errHideDelay:3000, //time to show err msg before hiding
 
 
     	//methods
+
+    	init: function(){
+
+    		this.appendRooms();
+			window.spinner = new Spinner(spinnerOpts).spin(formSpinner);
+			this.waitForm(false);
+    	},
+
    		resetState: function(){
    			$(stepForm).fadeOut(200, function(){
    				$(allStates).css('display','none');
@@ -224,7 +286,8 @@ $(document).ready(function() {
     		$(".state"+stateNum).css('display','block');
     	},
 
-    	show : function(stateNum,date){
+    	show : function(stateNum,startDate,endDate){
+
     		if(stateNum === null)
     			var stateNum = "1";
 
@@ -233,17 +296,20 @@ $(document).ready(function() {
     		$(stepForm).fadeIn();
 
 
-        	timeFormat = date.format('H:mm');
-    		this.arrTime = timeFormat;
-    		console.log(this.arrTime);
+        	startTimeFormatted = startDate.format('H:mm');
+    		this.arrTime = startTimeFormatted;
   			$(timepicker1).timepicker('setTime', this.arrTime);
 
-  			this.steppedUpTime =  date.add(stepHour,'hours').format('H:mm')//offset selected time by amount
+  			this.steppedUpTime =  endDate.format('H:mm');
   			$(timepicker2).timepicker('setTime',this.steppedUpTime);
-    	},
+
+  			$(headingDateLbl).text(endDate.format('MMMM Do YYYY'));
+  			$(headingArrTimeTxt).text(startDate.format('H:mm'));
+  			$(headingDepTimeTxt).text(endDate.format('H:mm'));
+
+  		},
 
     	nextState: function(){
-
 			this.state++;
     		$(allStates).fadeOut(200, function(){
     			$(".state"+form.state).fadeIn(100);
@@ -263,12 +329,76 @@ $(document).ready(function() {
 
     	setSelection: function(unix){
 
-    	}
+    	},
+
+    	//appends available rooms to form/room container
+		appendRooms: function(){
+			var preselClassName = "preselectedRoom";
+			var activeClass = "";//used internally don't change
+			if(availableRooms.length<1){
+				$(roomContainer).append("<p class='noDataPar'>No rooms available for this date</p>");
+				return;
+			}
+			for (var i = 0; i < availableRooms.length; i++) {
+				var roomId = availableRooms[i].roomId;
+				var roomName = availableRooms[i].roomName;
+				var roomDesc = availableRooms[i].roomDescription;
+				var roomImg = availableRooms[i].roomImg;
+				var roomCapacity = String(availableRooms[i].roomCapacity);
+					if(i===0){
+						activeClass= preselClassName;
+					}
+					else{
+						activeClass="";
+					}
+
+				$(roomContainer).append("<div class='roomRow "+activeClass+"' data-roomId='"+roomId+"'' ><div class='roomSnippet' ><img class='roomThumb' src='"+roomImg+"'/><div class='roomSnippetTxtContainer'><div class='roomSnippetTxtTitle'>"+roomName+"<span class='roomCapacityLbl'>Capacity: </span><span class='roomCapacityTxt'>"+roomCapacity+"</span></div><div class='roomSnippetTxtDescription'>"+roomDesc+"</div></div></div></div>");
+			}
+			this.selectedRoomId = availableRooms[0].roomId;
+
+			var allRoomRows = $('.roomRow');
+			$('body').on('click', '.roomRow', function() {
+			   $(allRoomRows).removeClass(preselClassName);
+			   $(this).addClass(preselClassName);
+			   this.selectedRoomId = $(this).attr('data-roomId');
+			});
+		},
+
+		showError: function(msg){
+
+			$(formErrMsg).text(msg);
+			$(formErrMsg).css('display','block');
+			setTimeout(function(){
+				$(formErrMsg).css('display','none');
+			},this.errHideDelay);
+
+		},
+
+		//shows/hides AJAX spinners, also interlocks the form to prevent user actions during wait
+		waitForm: function(bool){
+			if(bool){
+				$(stepForm).css('pointer-events','none');
+				disableNext(true);
+				$(formSpinner).fadeIn();
+				setTimeout(function(){
+					$(stepForm).css('pointer-events','all');
+					disableNext(false);
+					$(formSpinner).fadeOut();
+				},2000);
+			}else{
+				$(stepForm).css('pointer-events','all');
+				disableNext(false);
+				$(formSpinner).fadeOut();
+			}
+		}
 
 
 
 
     }
+
+
+    form.init();
 
 
 	//watch times on timepickers - stop user from maxing it or going below arrival time
@@ -282,22 +412,28 @@ $(document).ready(function() {
 
 	    if(depTimeAbs<=openTimeAbs||depTimeAbs>=(closeTimeAbs+stepHour)||depTimeAbs<=arrTimeAbs){
 	    	$(timepicker2).css('color','red');
+	    	form.showError('Depart time is sooner than arrival');
 	    	disableNext(true);
 	    }else{
 	    	$(timepicker2).css('color',origColorTimepickerColor);
 	    	disableNext(false);
 	    }
 
+	    if(depTimeAbs>=(closeTimeAbs+stepHour)){
+	    	form.showError("Depart time is later than last available slot");
+	    }
+
+
 	});
 
 	function disableNext(bool){
-		var origColor = $(timepicker2).css('color');
 		if (bool){
 			$(nextBtn).addClass('formBtnDisabled');
 		}else{
 			$(nextBtn).removeClass('formBtnDisabled');
 		}
 	}
+
 
 	//converts times to absolute hours, e.g 08:30->8
 	function absoluteTime(time){
@@ -319,6 +455,114 @@ $(document).ready(function() {
 
 *{
 	font-family:'Noto Sans',sans-serif;
+}
+
+
+#formSpinner{
+	visibility:visible;
+	position:absolute;
+	width:48px;
+	height:48px;
+	margin:auto;
+	top:0;
+	right:6px;
+	background-color:transparent;
+	z-index:999;
+	pointer-events:none;
+}
+
+#formErrMsg{
+	display:none;
+	font-size:12px;
+	color:#F44336;
+	text-align: center;
+}
+
+
+.noDataPar{
+	padding: 32px;
+	color: #aaa;
+}
+
+.roomRow{
+	width:100%;
+	height:64px;
+	margin-bottom:12px;
+	cursor:pointer;
+}
+
+.roomRow:hover{
+	background-color:#FCFAFA;
+}
+
+.preselectedRoom{
+	background-color:#F0F0F0;
+	color:#eee !important;
+}
+
+
+.roomSnippet{
+	position:relative;
+	width:240px;
+	height:64px;
+	padding-left:54px;
+	margin:0 auto;
+}
+
+.roomThumb{
+	display:block;
+	position:absolute;
+	width: 48px;
+	height: 48px;
+	margin:auto;
+	top:0;
+	bottom:0;
+	left:0;
+	border-radius: 50%;
+	border: 1px solid #aaa;
+}
+
+.roomSnippetTxtContainer{
+	padding-top:14px;
+	border-bottom: 1px solid #eee;
+	padding-bottom: 6px;
+}
+
+.roomSnippetTxtTitle{
+	width:60%;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	font-size:14px;
+	color:#000;
+}
+
+.roomSnippetTxtDescription{
+	width: 100%;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	font-size: 12px;
+	color: #aaa;
+}
+
+
+.roomCapacityLbl{
+	position: absolute;
+	margin: auto;
+	right: 24px;
+	top: 16px;
+	color: #aaa;
+	font-size: 10px;
+}
+
+.roomCapacityTxt{
+	position: absolute;
+	margin: auto;
+	right: 8px;
+	top: 16px;
+	color: #aaa;
+	font-size: 10px;
 }
 
 
