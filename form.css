@@ -1,0 +1,473 @@
+
+@import url(http://fonts.googleapis.com/css?family=Noto+Sans:400,700,400italic,700italic);
+
+*{
+	font-family:'Noto Sans',sans-serif;
+}
+
+
+
+/*Dropdown styling*/
+
+select{
+	border:0px;
+    outline:0px;
+    background-color:#fff;
+}
+
+#bookingCategoriesDropdown{
+   	color:#00BCD4;
+   	font-weight:bold;
+}
+
+
+/*end of*/
+
+#formBackBtn{
+	visibility: hidden;
+	float:left;
+	width:36px;
+	height:100%;
+	background-size:32px;
+	background-position: center;
+	background-repeat:no-repeat;
+	background-image:url('img/backBtnLight.png');
+	cursor:pointer;
+}
+
+#formSpinner{
+	visibility:visible;
+	position:absolute;
+	width:48px;
+	height:48px;
+	margin:auto;
+	top:0;
+	right:6px;
+	background-color:transparent;
+	z-index:999;
+	pointer-events:none;
+}
+
+#formErrMsg{
+	display:none;
+	font-size:12px;
+	color:#F44336;
+	text-align: center;
+}
+
+
+.noDataPar{
+	padding: 32px;
+	color: #aaa;
+}
+
+.listRow{
+	width:100%;
+	height:64px;
+	margin-bottom:12px;
+	cursor:pointer;
+}
+
+.listRow:hover{
+	background-color:#FCFAFA;
+}
+
+.preselectedRow{
+	background-color:#F0F0F0;
+	color:#eee !important;
+}
+
+
+.listRowSnippet{
+	position:relative;
+	width:240px;
+	height:64px;
+	padding-left:54px;
+	margin:0 auto;
+}
+
+.listRowThumb{
+	display:block;
+	position:absolute;
+	width: 48px;
+	height: 48px;
+	margin:auto;
+	top:0;
+	bottom:0;
+	left:0;
+	border-radius: 50%;
+	border: 1px solid #aaa;
+}
+
+.listRowSnippetTxtContainer{
+	padding-top:14px;
+	border-bottom: 1px solid #eee;
+	padding-bottom: 6px;
+}
+
+.listRowSnippetTxtTitle{
+	width:60%;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	font-size:14px;
+	color:#000;
+}
+
+.listRowSnippetTxtDescription{
+	width: 100%;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	font-size: 12px;
+	color: #aaa;
+}
+
+
+.roomCapacityLbl{
+	position: absolute;
+	margin: auto;
+	right: 24px;
+	top: 16px;
+	color: #aaa;
+	font-size: 10px;
+}
+
+.roomCapacityTxt{
+	position: absolute;
+	margin: auto;
+	right: 8px;
+	top: 16px;
+	color: #aaa;
+	font-size: 10px;
+}
+
+
+#calendar{
+	position:absolute;
+	width:100%;
+	margin:auto;
+	top:0;
+	bottom:0;
+	left:0;
+	right:0;
+	z-index:-1;
+}
+
+
+#calendar .fc-toolbar{
+	background-color: #00BCD4;
+	margin-bottom:0;
+	color:#fff;
+	height:64px;
+}
+
+#calendar .fc-toolbar h2{
+	margin-top:22px;
+	font-size:20px;
+}
+
+#calendar .fc-toolbar .fc-button{
+	height: 64px;
+	border: 0;
+	background-image: none;
+	background-color: transparent;
+	color:#fff;
+}
+
+#calendar .fc-toolbar .fc-button span{
+	color:#fff;
+}
+
+.fc-day-header{
+	background-color: #90CAF9;
+	color:#fff;
+	font-size:12px;
+}
+
+
+/*Form Styles*/
+	#stepForm{
+		display:none;
+	}
+
+	.state2{
+		display:none;
+	}
+
+	.stepForm{
+		display:none;
+	}
+
+	.formHeading{
+		width:100%;
+		height:56px;
+		line-height:36px;
+		font-size:18px;
+		font-weight:lighter;
+		color:#fff;
+		background-color:#00BCD4;
+		margin-bottom:8px;
+	}
+
+	.cardTitle{
+		height:18px;
+	}
+
+	.forDate{
+		font-size:12px;
+		color:#eee;
+	}
+
+	.formBtnContainer{
+		position:absolute;
+		width:100%;
+		height:54px;
+		margin: auto;
+		bottom:0;
+		border-top:1px solid #ccc;
+	}
+
+	.formBtn{
+		font-size: 14px;
+		font-weight: bold;
+		color: #00BCD4;
+		text-transform: uppercase;
+		cursor: pointer;
+		height: 54px;
+		line-height: 54px;
+		padding: 0px 32px;
+	}
+
+	.formBtn:hover{
+		background-color:#00BCD4;
+		color:#fff;
+	}
+
+	.formBtnDisabled{
+		pointer-events:none;
+		color:#aaa;
+	}
+
+
+	#cancelBtn{
+		width:50%;
+		float:left;
+	}
+
+	#nextBtn{
+		float:right;
+		width:50%;
+		text-align:right;
+	}
+	
+
+	h3{
+		font-size:18px;
+		color:#fff;
+	}
+
+	.optionsAccordion h4{
+		padding:0;
+		margin:0;
+		font-size: 14px;
+		color: #00BCD4;
+	}
+
+	.priceBox{
+		color: #333;
+		background-color: #fff;
+		border-radius: 2px;
+		margin-top:12px;
+		border-bottom:1px solid #00BCD4;
+	}
+
+	.priceBox .priceLbl{
+		display: inline-block;
+		height: 100%;
+		width: 25%;
+		color: #999;
+		padding: 6px;
+		border-radius: 2px 0px 0px 2px;
+	}
+
+	.priceBox .priceTxt{
+		display:inline-block;
+		float:right;
+		font-size:18px;
+		font-weight: bold;
+		color:#555;
+		padding: 6px;
+	}
+
+	::-webkit-input-placeholder { /* WebKit browsers */
+    color:    #00BCD4;
+	}
+	:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+	   color:    #00BCD4;
+	   opacity:  1;
+	}
+	::-moz-placeholder { /* Mozilla Firefox 19+ */
+	   color:    #00BCD4;
+	   opacity:  1;
+	}
+	:-ms-input-placeholder { /* Internet Explorer 10+ */
+	   color:    #00BCD4;
+	}
+
+    /*remove webkit autocomplete and border highlighting*/
+    
+    input:-webkit-autofill {
+        -webkit-box-shadow: 0 0 0 1000px #fff inset;
+    }
+    textarea:focus,
+    input:focus {
+        outline: 0;
+    }
+    body {
+        background-color: #fff;
+        font-family: 'Noto Sans', sans-serif;
+    }
+    .formContainer {
+        position: relative;
+        margin: 0 auto;
+    }
+
+    #loginFormWrapper {
+        position: relative;
+        width: 300px;
+        height: auto;
+        margin: 10% auto;
+        background-color: #fff;
+        border-radius: 2px;
+        padding-bottom:64px;
+        box-shadow: 0px 1px 5px 2px #ccc
+    }
+
+    .optionsAccordion{
+    	width:240px;
+    	margin:0 auto;
+    	margin-top:24px;
+    	margin-bottom:8px;
+    }
+
+    .panel-default,
+    .optionsAccordionHeading{
+    	background-color:transparent !important;
+    	border:0 !important;
+    	border:0px solid #fff;
+		cursor:pointer !important;
+    }
+
+    .optionsAccordionHeading{
+    	background-size:20px;
+    	background-repeat: no-repeat;
+		background-position: -1px 6px;
+    	background-image:url('img/plus.png');
+    	padding-left:30px;
+    }
+
+    .inputWrapper {
+        display: block;
+        position: relative;
+        width: 240px;
+        height: 42px;
+        margin: 0 auto;
+        padding-left: 28px;
+        border-radius: 2px;
+        border: none;
+        background-size: 18px;
+        background-position: left;
+        background-repeat: no-repeat;
+        background-color: transparent;
+        margin-bottom: 12px;
+    }
+
+
+    /*Event Details inputs*/
+
+    #bookingCatInputWrapper {
+        background-image: url('img/pavillion.png');
+    }
+
+    #bookingNameInputWrapper {
+        background-image: url('img/organization.png');
+    }
+
+    #bookingDescriptionInputWrapper {
+        background-image: url('img/textpad.png');
+    }
+
+
+    /*User Details inputs*/
+
+    #nameInputWrapper {
+        background-image: url('img/user.png');
+    }
+
+    #organizationInputWrapper {
+        background-image: url('img/megaphone.png');
+    }
+
+    #phoneInputWrapper {
+        background-image: url('img/phone.png');
+    }
+
+    #emailInputWrapper {
+        background-image: url('img/email.png');
+    }
+
+    /*end*/
+
+    .textInput {
+        position: relative;
+        float: right;
+        width: 100%;
+        height: 100%;
+        border: 0px;
+        border-radius: 2px;
+        color: #333;
+    	background-color: transparent;
+		border-bottom: 1px solid #ccc;
+    }
+
+    #emailSpinner,
+    #loginSpinner {
+        visibility: hidden;
+        position: absolute;
+        left: 6px;
+        top: 10px;
+        width: 22px;
+        height: 22px;
+    }
+    .errorMsg {
+        display: none;
+        position: absolute;
+        width: 100%;
+        top: 240px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 14px;
+        color: #A50A01;
+        font-weight: bold;
+    }
+    .bottomLink {
+        position: absolute;
+        bottom: 8px;
+        left: 0;
+        right: 0;
+        margin: auto;
+        display: block;
+        width: 100%;
+        overflow: auto;
+        font-size: 14px;
+        text-align: center;
+        color: #eee;
+        cursor: pointer;
+    }
+    .bottomLink:hover {
+        color: #fff;
+        text-decoration: underline;
+    }
+</style>

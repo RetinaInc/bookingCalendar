@@ -9,11 +9,15 @@
     <link rel="stylesheet" type="text/css" href="libraries/bootstrap-timepicker.min.css">
 
 	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="libraries/easydropdown/themes/easydropdown.flat.css">
+	<link rel="stylesheet" href="form.css">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.2/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.2.7/fullcalendar.js"></script>
+    <script src="libraries/spin.min.js"></script>
+    <script src="libraries/easydropdown/src/jquery.easydropdown.js"></script>
     <script src="libraries/spin.min.js"></script>
 
     <script src="libraries/bootstrap-timepicker.min.js"></script>
@@ -25,16 +29,22 @@
     <div id="stepForm" class=".stepForm">
         <div id="loginFormWrapper">
         	<div class="formHeading">
-        		<div class='cardTitle'>Book <span id='roomNameTxt'>---</span></div>
+        		<div id='formBackBtn'></div>
+        		<div class='cardTitle'>Book <span id='roomNameTxt'>a Room</span></div>
         		<span class="forDate"><span id="headingDateLbl">21/12/2016</span>, <span id="headingArrTimeTxt">11:00</span> - <span id="headingDepTimeTxt">13:00</span></span>
         	</div>
         	<div id="formSpinner"></div>
 	       	<div id="formErrMsg">An error occured!</div>
-        	<div class='state state1'>
-        		<div id="roomContainer">
+       		<div class='state state1'>
+        		<div id="bookingTypeContainer">
+
 				</div>
         	</div>
         	<div class='state state2'>
+        		<div id="roomContainer">
+				</div>
+        	</div>
+        	<div class='state state3'>
         		<div id="nameInputWrapper" class="inputWrapper">
 	                <input type="text" id="timepicker1" class="textInput input-small" placeholder="Full Name" name="username">
 	            </div>
@@ -42,7 +52,33 @@
 	                <input type="text" id="timepicker2" class="textInput input-small" placeholder="Click to set departure time" name="username">
 	            </div>
         	</div>
-        	<div class='state state3'>
+			<div class='state state4'>
+	            <div id="bookingCatInputWrapper" class="inputWrapper">
+	                <select id="bookingCategoriesDropdown" class="textInput">
+					    <option value="0" class="label">Category</option>
+					</select>
+	            </div>
+	            <div id="bookingNameInputWrapper" class="inputWrapper">
+	                <input type="text" id="bookingNameInput" class="textInput" placeholder="Event Title">
+	            </div>
+	            <div id="bookingDescriptionInputWrapper" class="inputWrapper">
+	                <input type="text" id="bookingDescInput" class="textInput" placeholder="Event Description">
+	            </div>
+	            <hr>
+	            <div class="panel-group optionsAccordion" id="accordion">
+	                <div class="panel panel-default">
+	                    <div class="panel-heading optionsAccordionHeading">
+	                        <h4>
+	              				<span data-toggle="collapse" data-parent="#accordion" href="#collapse1">Add options</span>
+	            			</h4>
+	                    </div>
+	                    <div id="collapse1" class="panel-collapse collapse out">
+	                        <div class="panel-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</div>
+	                    </div>
+	                </div>
+	            </div>
+	            </div>
+        		<div class='state state5'>
 	            <div id="nameInputWrapper" class="inputWrapper">
 	                <input type="text" id="usernameInput" class="textInput" placeholder="Full Name" name="username">
 	            </div>
@@ -55,17 +91,8 @@
 	            <div id="emailInputWrapper" class="inputWrapper">
 	                <input type="text" id="passwordInput" class="textInput" placeholder="Email" name="password">
 	            </div>
-	            <div class="panel-group optionsAccordion" id="accordion">
-	                <div class="panel panel-default">
-	                    <div class="panel-heading optionsAccordionHeading">
-	                        <h4>
-	              				<span data-toggle="collapse" data-parent="#accordion" href="#collapse1">Add options</span>
-	            			</h4>
-	                    </div>
-	                    <div id="collapse1" class="panel-collapse collapse out">
-	                        <div class="panel-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</div>
-	                    </div>
-	                </div>
+	            <div class="inputWrapper">
+
 	                <hr>
 	                <div class="priceBox">
 	                	<span class="priceLbl">Price:</span><span class="priceTxt"><span style='font-weight:lighter;'>&euro;&nbsp;</span>39.90</span>
@@ -123,14 +150,26 @@ $(document).ready(function() {
 		  "end": "2015-26-15T15:00:00"
 		}
 		],
+		"bookingTypes": [
+		{
+		  "bookingTypeName": "Public Booking",
+		  "bookingTypeDescription": "Use this for public events",
+		  "bookingTypeImg": "https://cdn4.iconfinder.com/data/icons/whsr-january-flaticon-set/512/rocket.png",
+		},
+		{
+		  "bookingTypeName": "Private Booking",
+		  "bookingTypeDescription": "Use this for private events",
+		  "bookingTypeImg": "http://zizaza.com/cache/big_thumb/iconset/582048/582062/PNG/256/like_a_flat_part_3/key_flat_web_icon_png_key_png_key_icon.png",
+		}
+		],
 		"availableRooms": [
 		{
 		  "roomId": "room-55",
 		  "roomName": "Aphrodite Room",
-		  "roomDescription": "Lorem, ipsum solor dit amet,dit amet",
-		  "roomImg": "http://gold-estate.lv/wp-content/uploads/2013/09/Modern-Interior-Design-7042.jpg",
-		  "roomCapacity": 69,
-		  "pricePerHour":39.00,
+		  "roomImg": "http://trinityriver.audubon.org/sites/default/files/photos/conference_room.jpg",
+		  "roomDescription": "Lorem, ipsum solor dit amet,dit amet, ",
+		  "roomCapacity": 90,
+		  "pricePerHour":29.00,
 		  "minSlotHours" : 4
 		},
 		{
@@ -143,6 +182,17 @@ $(document).ready(function() {
 		  "minSlotHours" : 4
 		}
 		],
+		"bookingCategories": [
+		{
+			"bookingCategoryName":"Yoga Class"
+		},
+		{
+		  "bookingCategoryName":"Project Planning"
+		},
+		{
+		  "bookingCategoryName":"Wood Carving"
+		},
+		],
 		"calendarOptions": {
 		"stepHour": 1,
 		"c": "d",
@@ -154,8 +204,10 @@ $(document).ready(function() {
 	var firstSlot = bookingJSON.firstSlot;
 	var lastSlot = bookingJSON.lastSlot;
 	var eventsArray = bookingJSON.eventsArray;
+	var bookingTypes = bookingJSON.bookingTypes;
 	var availableRooms = bookingJSON.availableRooms;
-	var preselRoomClassName = "preselectedRoom"; //class to add to highlighted room selection
+	var bookingCategories = bookingJSON.bookingCategories;
+	var preselRowClassName = "preselectedRow"; //class to add to highlighted room selection
 
 
 
@@ -163,7 +215,10 @@ $(document).ready(function() {
 	//DOM handles
 	var stepForm = $("#stepForm");
 	var allStates = $(".state");
+
+	var formBackBtn = $("#formBackBtn");
 	var nextBtn = $("#nextBtn");
+	var cancelBtn =$("#cancelBtn");
 	var formErrMsg = $("#formErrMsg");
 	var roomNameTxt = $("#roomNameTxt");
 	var headingDateLbl = $("#headingDateLbl");
@@ -173,6 +228,8 @@ $(document).ready(function() {
 	var timepicker1 = $("#timepicker1");
 	var timepicker2 = $("#timepicker2");
 	var roomContainer = $("#roomContainer");
+	var bookingTypeContainer = $("#bookingTypeContainer");
+	var bookingCategoriesDropdown = $("#bookingCategoriesDropdown");
 
 
 
@@ -250,21 +307,26 @@ $(document).ready(function() {
     });
 
 
-    $("#cancelBtn").click(function(){
+    $(cancelBtn).click(function(){
     	$("#calendar").css('opacity','1');
     	$('.stepForm').fadeOut();
     	form.resetForm();
     });
 
-    $("#nextBtn").click(function(){
-    	form.nextState();
+    $(nextBtn).click(function(){
+    	form.switchState('next');
+    });
+
+    $(formBackBtn).click(function(){
+    	form.switchState('previous');
     });
 
 
     var form ={
 
     	//vars
-    	mode : "booking", //current mode, other could be e.g 'join event'
+    	mode : "booking", //never changes for this module
+    	selectedBookingType:"privateBooking",
     	state: "1", //default state(view) of form
     	arrDate:"00:00", //arrival time - selectable on calendar - also displayed on form
     	depDate:"01:00", //departure time - selectable on form 
@@ -278,10 +340,12 @@ $(document).ready(function() {
 
     	init: function(){
 
+    		this.appendBookingTypes();
     		this.appendRooms();
+    		this.appendBookingCategories();
 			window.spinner = new Spinner(spinnerOpts).spin(formSpinner);
 			this.waitForm(false);
-			$(roomNameTxt).text(this.selectedRoomName);
+			hideFormBackBtn(true);
     	},
 
    		resetState: function(){
@@ -310,6 +374,7 @@ $(document).ready(function() {
 
     	show : function(stateNum,startDate,endDate){
 
+
     		$(allRoomRows).remove();
 			this.appendRooms();
 
@@ -335,17 +400,39 @@ $(document).ready(function() {
   			$(headingDateLbl).text(endDate.format('MMMM Do YYYY'));
   			$(headingArrTimeTxt).text(startDate.format('H:mm'));
   			$(headingDepTimeTxt).text(endDate.format('H:mm'));
+			disableNext(true);
 
   		},
 
-    	nextState: function(){
-			this.state++;
+    	switchState: function(direction){
+
+    		if(direction==='next'){
+				this.state++;
+    		}
+			if(direction==='previous'){
+				if(this.state>1){
+					this.state--;
+				}else{
+					return false;
+				}
+			}
+
+
+			console.log(this.state)
     		$(allStates).css('display','none');
     		$(".state"+form.state).slideDown(300);
 
 			switch(this.state) {
-			    case 3:
 
+				case 1:
+					hideFormBackBtn(true);
+					disableNext(true);
+
+				case 2:
+					hideFormBackBtn(false);
+					disableNext(true);
+			    case 3:
+					hideFormBackBtn(false);
 			        var finalArrTime = $(timepicker1).val();
 			        var finalDepTime = $(timepicker2).val();
 
@@ -354,16 +441,55 @@ $(document).ready(function() {
 
 			        break;
 			    case 4:
-			       console.log(JSON.stringify(form));
-			        break;
+
+				   	hideFormBackBtn(false);
+				   	console.log(this.selectedBookingType)
+					if(this.selectedBookingType==="Private Booking"){
+						disableBookingCatDropdown(true);
+					}
+					if(this.selectedBookingType==="Public Booking"){
+						disableBookingCatDropdown(false);
+					}
+
+			    break;
 			    default:
-			        console.log('nextState form. method defaulted switch case')
+			        console.log('switchState form. method defaulted switch case')
 			}
     	},
 
     	setSelection: function(unix){
 
     	},
+
+    	//appends available rooms to form/room container
+		appendBookingTypes: function(){
+			var activeClass = "";//used internally don't change
+			if(bookingTypes.length<1){
+				$(bookingContainer).append("<p class='noDataPar'>An error has occured when fetching booking types. Please try again</p>");
+				return;
+			}
+			for (var i = 0; i < bookingTypes.length; i++) {
+				var bookingTypeName = bookingTypes[i].bookingTypeName;
+				var bookingTypeDesc = bookingTypes[i].bookingTypeDescription;
+				var bookingTypeImg = bookingTypes[i].bookingTypeImg;
+					if(i===0){
+						activeClass= preselRowClassName;
+					}
+					else{
+						activeClass="";
+					}
+
+				$(bookingTypeContainer).append("<div class='listRow bookingTypeRow "+activeClass+"' data-bookingTypeName='"+bookingTypeName+"''><div class='listRowSnippet bookingTypeRowSnippet' ><img class='listRowThumb bookingTypeRowThumb' src='"+bookingTypeImg+"'/><div class='listRowSnippetTxtContainer bookingTypeSnippetTxtContainer'><div class='listRowSnippetTxtTitle bookingTypeSnippetTxtTitle'>"+bookingTypeName+"</div><div class='listRowSnippetTxtDescription bookingTypeSnippetTxtDescription'>"+bookingTypeDesc+"</div></div></div></div>");
+			}
+
+			window.allBookingTypeRows = $('.bookingTypeRow');
+			$('body').on('click', '.bookingTypeRow', function() {
+			   $(allBookingTypeRows).removeClass(preselRowClassName);
+			   $(this).addClass(preselRowClassName);
+			   form.selectedBookingType = $(this).attr('data-bookingTypeName');
+			   disableNext(false);
+			});
+		},
 
     	//appends available rooms to form/room container
 		appendRooms: function(){
@@ -379,27 +505,34 @@ $(document).ready(function() {
 				var roomImg = availableRooms[i].roomImg;
 				var roomCapacity = String(availableRooms[i].roomCapacity);
 					if(i===0){
-						activeClass= preselRoomClassName;
+						activeClass= preselRowClassName;
 					}
 					else{
 						activeClass="";
 					}
-
-				$(roomContainer).append("<div class='roomRow "+activeClass+"' data-roomId='"+roomId+"'' data-roomName='"+roomName+"''><div class='roomSnippet' ><img class='roomThumb' src='"+roomImg+"'/><div class='roomSnippetTxtContainer'><div class='roomSnippetTxtTitle'>"+roomName+"<span class='roomCapacityLbl'>Capacity: </span><span class='roomCapacityTxt'>"+roomCapacity+"</span></div><div class='roomSnippetTxtDescription'>"+roomDesc+"</div></div></div></div>");
+				console.log(activeClass);
+				$(roomContainer).append("<div class='listRow roomRow "+activeClass+"' data-roomId='"+roomId+"' data-roomName='"+roomName+"''><div class='listRowSnippet roomSnippet' ><img class='listRowThumb roomThumb' src='"+roomImg+"'/><div class='listRowSnippetTxtContainer roomSnippetTxtContainer'><div class='listRowSnippetTxtTitle roomSnippetTxtTitle'>"+roomName+"<span class='roomCapacityLbl'>Capacity: </span><span class='roomCapacityTxt'>"+roomCapacity+"</span></div><div class='listRowSnippetTxtDescription roomSnippetTxtDescription'>"+roomDesc+"</div></div></div></div>");
 			}
 
 			this.selectedRoomId = availableRooms[0].roomId;
 			this.selectedRoomName = availableRooms[0].roomName;
-			$(roomNameTxt).text(this.selectedRoomName);
 
 			window.allRoomRows = $('.roomRow');
 			$('body').on('click', '.roomRow', function() {
-			   $(allRoomRows).removeClass(preselRoomClassName);
-			   $(this).addClass(preselRoomClassName);
-			   this.selectedRoomId = $(this).attr('data-roomId');
-			   this.selectedRoomName = $(this).attr('data-roomName');
+			   $(allRoomRows).removeClass(preselRowClassName);
+			   $(this).addClass(preselRowClassName);
+			   form.selectedRoomId = $(this).attr('data-roomId');
+			   form.selectedRoomName = $(this).attr('data-roomName');
+			   disableNext(false);
 			   $(roomNameTxt).text(this.selectedRoomName);
 			});
+		},
+
+		appendBookingCategories: function(){
+			for (var i = 0; i < bookingCategories.length; i++) {
+				var bookingCategoryName = bookingCategories[i].bookingCategoryName;
+				$(bookingCategoriesDropdown).append("<option value='"+bookingCategoryName+"'>"+bookingCategoryName+"</option>");
+			};
 		},
 
 		showError: function(msg){
@@ -468,11 +601,31 @@ $(document).ready(function() {
 	});
 
 
+	function disableBookingCatDropdown(bool){
+	   	if(bool){
+		   	$(bookingCategoriesDropdown).prop("disabled",true);
+		   	$(bookingCategoriesDropdown).css("opacity","0.5");
+		   	$(bookingCategoriesDropdown).val(0);
+		}else{
+		   	$(bookingCategoriesDropdown).prop("disabled",false);
+		   	$(bookingCategoriesDropdown).css("opacity","1.0");
+		}
+	}
+
+
 	function disableNext(bool){
 		if (bool){
 			$(nextBtn).addClass('formBtnDisabled');
 		}else{
 			$(nextBtn).removeClass('formBtnDisabled');
+		}
+	}
+
+	function hideFormBackBtn(bool){
+		if (bool){
+			$(formBackBtn).css('visibility','hidden');
+		}else{
+			$(formBackBtn).css('visibility','visible');
 		}
 	}
 
@@ -490,432 +643,3 @@ $(document).ready(function() {
 });
 
 </script>
-
-<style>
-
-@import url(http://fonts.googleapis.com/css?family=Noto+Sans:400,700,400italic,700italic);
-
-*{
-	font-family:'Noto Sans',sans-serif;
-}
-
-
-#formSpinner{
-	visibility:visible;
-	position:absolute;
-	width:48px;
-	height:48px;
-	margin:auto;
-	top:0;
-	right:6px;
-	background-color:transparent;
-	z-index:999;
-	pointer-events:none;
-}
-
-#formErrMsg{
-	display:none;
-	font-size:12px;
-	color:#F44336;
-	text-align: center;
-}
-
-
-.noDataPar{
-	padding: 32px;
-	color: #aaa;
-}
-
-.roomRow{
-	width:100%;
-	height:64px;
-	margin-bottom:12px;
-	cursor:pointer;
-}
-
-.roomRow:hover{
-	background-color:#FCFAFA;
-}
-
-.preselectedRoom{
-	background-color:#F0F0F0;
-	color:#eee !important;
-}
-
-
-.roomSnippet{
-	position:relative;
-	width:240px;
-	height:64px;
-	padding-left:54px;
-	margin:0 auto;
-}
-
-.roomThumb{
-	display:block;
-	position:absolute;
-	width: 48px;
-	height: 48px;
-	margin:auto;
-	top:0;
-	bottom:0;
-	left:0;
-	border-radius: 50%;
-	border: 1px solid #aaa;
-}
-
-.roomSnippetTxtContainer{
-	padding-top:14px;
-	border-bottom: 1px solid #eee;
-	padding-bottom: 6px;
-}
-
-.roomSnippetTxtTitle{
-	width:60%;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	font-size:14px;
-	color:#000;
-}
-
-.roomSnippetTxtDescription{
-	width: 100%;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	font-size: 12px;
-	color: #aaa;
-}
-
-
-.roomCapacityLbl{
-	position: absolute;
-	margin: auto;
-	right: 24px;
-	top: 16px;
-	color: #aaa;
-	font-size: 10px;
-}
-
-.roomCapacityTxt{
-	position: absolute;
-	margin: auto;
-	right: 8px;
-	top: 16px;
-	color: #aaa;
-	font-size: 10px;
-}
-
-
-#calendar{
-	position:absolute;
-	width:100%;
-	margin:auto;
-	top:0;
-	bottom:0;
-	left:0;
-	right:0;
-	z-index:-1;
-}
-
-
-#calendar .fc-toolbar{
-	background-color: #00BCD4;
-	margin-bottom:0;
-	color:#fff;
-	height:64px;
-}
-
-#calendar .fc-toolbar h2{
-	margin-top:22px;
-	font-size:20px;
-}
-
-#calendar .fc-toolbar .fc-button{
-	height: 64px;
-	border: 0;
-	background-image: none;
-	background-color: transparent;
-	color:#fff;
-}
-
-#calendar .fc-toolbar .fc-button span{
-	color:#fff;
-}
-
-.fc-day-header{
-	background-color: #90CAF9;
-	color:#fff;
-	font-size:12px;
-}
-
-
-/*Form Styles*/
-	#stepForm{
-		display:none;
-	}
-
-	.state2{
-		display:none;
-	}
-
-	.stepForm{
-		display:none;
-	}
-
-	.formHeading{
-		width:100%;
-		height:56px;
-		line-height:36px;
-		font-size:18px;
-		font-weight:lighter;
-		padding-left:32px;
-		color:#fff;
-		background-color:#00BCD4;
-		margin-bottom:8px;
-	}
-
-	.cardTitle{
-		height:18px;
-	}
-
-	.forDate{
-		font-size:12px;
-		color:#eee;
-	}
-
-	.formBtnContainer{
-		position:absolute;
-		width:100%;
-		height:54px;
-		margin: auto;
-		bottom:0;
-		border-top:1px solid #ccc;
-	}
-
-	.formBtn{
-		font-size: 14px;
-		font-weight: bold;
-		color: #00BCD4;
-		text-transform: uppercase;
-		cursor: pointer;
-		height: 54px;
-		line-height: 54px;
-		padding: 0px 32px;
-	}
-
-	.formBtn:hover{
-		background-color:#00BCD4;
-		color:#fff;
-	}
-
-	.formBtnDisabled{
-		pointer-events:none;
-		color:#aaa;
-	}
-
-
-	#cancelBtn{
-		width:50%;
-		float:left;
-	}
-
-	#nextBtn{
-		float:right;
-		width:50%;
-		text-align:right;
-	}
-	
-
-	h3{
-		font-size:18px;
-		color:#fff;
-	}
-
-	.optionsAccordion h4{
-		padding:0;
-		margin:0;
-		font-size: 14px;
-		color: #00BCD4;
-	}
-
-	.priceBox{
-		color: #333;
-		background-color: #fff;
-		border-radius: 2px;
-		margin-top:12px;
-		border-bottom:1px solid #00BCD4;
-	}
-
-	.priceBox .priceLbl{
-		display: inline-block;
-		height: 100%;
-		width: 25%;
-		color: #999;
-		padding: 6px;
-		border-radius: 2px 0px 0px 2px;
-	}
-
-	.priceBox .priceTxt{
-		display:inline-block;
-		float:right;
-		font-size:18px;
-		font-weight: bold;
-		color:#555;
-		padding: 6px;
-	}
-
-	::-webkit-input-placeholder { /* WebKit browsers */
-    color:    #00BCD4;
-	}
-	:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
-	   color:    #00BCD4;
-	   opacity:  1;
-	}
-	::-moz-placeholder { /* Mozilla Firefox 19+ */
-	   color:    #00BCD4;
-	   opacity:  1;
-	}
-	:-ms-input-placeholder { /* Internet Explorer 10+ */
-	   color:    #00BCD4;
-	}
-
-    /*remove webkit autocomplete and border highlighting*/
-    
-    input:-webkit-autofill {
-        -webkit-box-shadow: 0 0 0 1000px #fff inset;
-    }
-    textarea:focus,
-    input:focus {
-        outline: 0;
-    }
-    body {
-        background-color: #fff;
-        font-family: 'Noto Sans', sans-serif;
-    }
-    .formContainer {
-        position: relative;
-        margin: 0 auto;
-    }
-
-    #loginFormWrapper {
-        position: relative;
-        width: 300px;
-        height: auto;
-        margin: 10% auto;
-        background-color: #fff;
-        border-radius: 2px;
-        padding-bottom:64px;
-        box-shadow: 0px 1px 5px 2px #ccc
-    }
-
-    .optionsAccordion{
-    	width:240px;
-    	margin:0 auto;
-    	margin-top:24px;
-    	margin-bottom:8px;
-    }
-
-    .panel-default,
-    .optionsAccordionHeading{
-    	background-color:transparent !important;
-    	border:0 !important;
-    	border:0px solid #fff;
-		cursor:pointer !important;
-    }
-
-    .optionsAccordionHeading{
-    	background-size:20px;
-    	background-repeat: no-repeat;
-		background-position: -1px 6px;
-    	background-image:url('img/plus.png');
-    	padding-left:30px;
-    }
-
-    .inputWrapper {
-        display: block;
-        position: relative;
-        width: 240px;
-        height: 42px;
-        margin: 0 auto;
-        padding-left: 28px;
-        border-radius: 2px;
-        border: none;
-        background-size: 18px;
-        background-position: left;
-        background-repeat: no-repeat;
-        background-color: transparent;
-        margin-bottom: 12px;
-    }
-
-
-    #nameInputWrapper {
-        background-image: url('img/user.png');
-    }
-
-    #organizationInputWrapper {
-        background-image: url('img/organization.png');
-    }
-
-    #phoneInputWrapper {
-        background-image: url('img/phone.png');
-    }
-
-    #emailInputWrapper {
-        background-image: url('img/email.png');
-    }
-
-
-    .textInput {
-        position: relative;
-        float: right;
-        width: 100%;
-        height: 100%;
-        border: 0px;
-        border-radius: 2px;
-        color: #333;
-    	background-color: transparent;
-		border-bottom: 1px solid #ccc;
-    }
-
-    #emailSpinner,
-    #loginSpinner {
-        visibility: hidden;
-        position: absolute;
-        left: 6px;
-        top: 10px;
-        width: 22px;
-        height: 22px;
-    }
-    .errorMsg {
-        display: none;
-        position: absolute;
-        width: 100%;
-        top: 240px;
-        left: 0;
-        right: 0;
-        text-align: center;
-        font-size: 14px;
-        color: #A50A01;
-        font-weight: bold;
-    }
-    .bottomLink {
-        position: absolute;
-        bottom: 8px;
-        left: 0;
-        right: 0;
-        margin: auto;
-        display: block;
-        width: 100%;
-        overflow: auto;
-        font-size: 14px;
-        text-align: center;
-        color: #eee;
-        cursor: pointer;
-    }
-    .bottomLink:hover {
-        color: #fff;
-        text-decoration: underline;
-    }
-</style>
