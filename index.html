@@ -3,21 +3,19 @@
 
 <head>
     <title>JetForms!</title>
-
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.2/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.2.7/fullcalendar.css">
     <link rel="stylesheet" type="text/css" href="libraries/bootstrap-timepicker.min.css">
 
 	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-	<link rel="stylesheet" href="libraries/easydropdown/themes/easydropdown.flat.css">
 	<link rel="stylesheet" href="form.css">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.2/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
+    <script src="libraries/moment-range.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.2.7/fullcalendar.js"></script>
-    <script src="libraries/spin.min.js"></script>
-    <script src="libraries/easydropdown/src/jquery.easydropdown.js"></script>
     <script src="libraries/spin.min.js"></script>
 
     <script src="libraries/bootstrap-timepicker.min.js"></script>
@@ -41,16 +39,16 @@
 				</div>
         	</div>
         	<div class='state state2'>
-        		<div id="roomContainer">
-				</div>
-        	</div>
-        	<div class='state state3'>
         		<div id="nameInputWrapper" class="inputWrapper">
 	                <input type="text" id="timepicker1" class="textInput input-small" placeholder="Full Name" name="username">
 	            </div>
 	            <div id="organizationInputWrapper" class="inputWrapper">
 	                <input type="text" id="timepicker2" class="textInput input-small" placeholder="Click to set departure time" name="username">
 	            </div>
+        	</div>
+        	<div class='state state3'>
+        		<div id="roomContainer">
+				</div>
         	</div>
 			<div class='state state4'>
 	            <div id="bookingCatInputWrapper" class="inputWrapper">
@@ -67,29 +65,30 @@
 	            <hr>
 	            <div class="panel-group optionsAccordion" id="accordion">
 	                <div class="panel panel-default">
-	                    <div class="panel-heading optionsAccordionHeading">
+	                    <div data-toggle="collapse" data-parent="#accordion" href="#collapse1" class="panel-heading optionsAccordionHeading">
 	                        <h4>
-	              				<span data-toggle="collapse" data-parent="#accordion" href="#collapse1">Add options</span>
+	              				<span>Add options</span>
 	            			</h4>
 	                    </div>
 	                    <div id="collapse1" class="panel-collapse collapse out">
-	                        <div class="panel-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</div>
+	                        <div id="optionsContainer" class="panel-body">
+	                        </div>
 	                    </div>
 	                </div>
 	            </div>
 	            </div>
         		<div class='state state5'>
 	            <div id="nameInputWrapper" class="inputWrapper">
-	                <input type="text" id="usernameInput" class="textInput" placeholder="Full Name" name="username">
+	                <input type="text" id="userNameInput" class="textInput" placeholder="Full Name" name="username">
 	            </div>
 	            <div id="organizationInputWrapper" class="inputWrapper">
-	                <input type="text" id="passwordInput" class="textInput" placeholder="Organization" name="password">
+	                <input type="text" id="userOrganizationInput" class="textInput" placeholder="Organization" name="password">
 	            </div>
 	            <div id="phoneInputWrapper" class="inputWrapper">
-	                <input type="text" id="usernameInput" class="textInput" placeholder="Phone Number" name="username">
+	                <input type="text" id="userPhoneInput" class="textInput" placeholder="Phone Number" name="username">
 	            </div>
 	            <div id="emailInputWrapper" class="inputWrapper">
-	                <input type="text" id="passwordInput" class="textInput" placeholder="Email" name="password">
+	                <input type="text" id="userEmailInput" class="textInput" placeholder="Email" name="password">
 	            </div>
 	            <div class="inputWrapper">
 
@@ -99,6 +98,17 @@
 	                </div>
 	            </div>
             </div>
+            <!--Final States-->
+            <div class='state state6'>
+            	<div class="confirmationContainer">
+            		<p>You have <strong>6</strong> hours remaiming for this month.</p>
+            		<p>We substracted those hours and you now have to pay <strong>35.00 Euros</strong></p>
+            		<br>
+            		<div class="confirmBookingBtnContainer">
+            			<div id="confirmBookingBtn" class="formPrimaryBtn">Book Now</div>
+            		</div>
+            	</div>
+        	</div>
                 <div class="formBtnContainer">
 	                <div id="cancelBtn" class="formBtn">
 	                	Cancel
@@ -126,72 +136,98 @@ $(document).ready(function() {
 	var bookingJSON={
 		"firstSlot": "9:00",
 		"lastSlot": "20:00",
+		"defaultBookingpricePerSlot": 24.00,
+		"defaultMinSlotTime": 4,
 		"number": 123,
-		"string": "Hello World",
-		"eventsArray": [
+		"contactPageUrl": "http://www.google.com",
+		"currencySign":"<i class='fa fa-eur'></i>",
+		"bookingArray": [
 		{
 		  "title": "Globalsoft Booking",
 		  "start": "2015-02-10T10:00:00",
-		  "end": "2015-02-10T20:00:00"
+		  "end": "2015-02-10T20:00:00",
+		  "roomId":"1111"
 		},
 		{
 		  "title": "Opium Works Booking",
 		  "start": "2015-02-15T11:00:00",
-		  "end": "2015-02-15T12:00:00"
+		  "end": "2015-02-15T12:00:00",
+		  "roomId":"1111"
 		},
 		{
 		  "title": "Private Booking",
-		  "start": "2015-02-15T11:00:00",
-		  "end": "2015-02-15T13:00:00"
+		  "start": "2015-02-15T14:00:00",
+		  "end": "2015-02-15T18:00:00",
+		  "roomId":"2222"
 		},
 		{
 		  "title": "Private Booking",
 		  "start": "2015-26-15T11:00:00",
-		  "end": "2015-26-15T15:00:00"
+		  "end": "2015-26-15T15:00:00",
+		  "roomId":"1111"
 		}
 		],
 		"bookingTypes": [
 		{
 		  "bookingTypeName": "Public Booking",
 		  "bookingTypeDescription": "Use this for public events",
-		  "bookingTypeImg": "https://cdn4.iconfinder.com/data/icons/whsr-january-flaticon-set/512/rocket.png",
+		  "bookingTypeImg": "https://cdn4.iconfinder.com/data/icons/whsr-january-flaticon-set/512/rocket.png"
 		},
 		{
 		  "bookingTypeName": "Private Booking",
 		  "bookingTypeDescription": "Use this for private events",
-		  "bookingTypeImg": "http://zizaza.com/cache/big_thumb/iconset/582048/582062/PNG/256/like_a_flat_part_3/key_flat_web_icon_png_key_png_key_icon.png",
+		  "bookingTypeImg": "http://zizaza.com/cache/big_thumb/iconset/582048/582062/PNG/256/like_a_flat_part_3/key_flat_web_icon_png_key_png_key_icon.png"
 		}
 		],
 		"availableRooms": [
 		{
-		  "roomId": "room-55",
+		  "roomId": "1111",
 		  "roomName": "Aphrodite Room",
 		  "roomImg": "http://trinityriver.audubon.org/sites/default/files/photos/conference_room.jpg",
 		  "roomDescription": "Lorem, ipsum solor dit amet,dit amet, ",
 		  "roomCapacity": 90,
-		  "pricePerHour":29.00,
-		  "minSlotHours" : 4
+		  "pricePerSlot":30.00,
+		  "minSlotHours" : 4,
+		  "roomAvailable":true
 		},
 		{
-		  "roomId": "room-12",
+		  "roomId": "2222",
 		  "roomName": "Kostas Room",
 		  "roomImg": "http://trinityriver.audubon.org/sites/default/files/photos/conference_room.jpg",
 		  "roomDescription": "Lorem, ipsum solor dit amet,dit amet, ",
 		  "roomCapacity": 124,
-		  "pricePerHour":39.00,
-		  "minSlotHours" : 4
+		  "pricePerSlot":40.00,
+		  "minSlotHours" : 4,
+		  "roomAvailable":false
 		}
 		],
 		"bookingCategories": [
-		{
-			"bookingCategoryName":"Yoga Class"
-		},
-		{
-		  "bookingCategoryName":"Project Planning"
-		},
-		{
-		  "bookingCategoryName":"Wood Carving"
-		},
+										{
+										"bookingCategoryName":"Yoga Class"
+										},
+										{
+										  "bookingCategoryName":"Project Planning"
+										},
+										{
+										  "bookingCategoryName":"Wood Carving"
+										},
+		],
+				"bookingOptions": [
+										{
+											"optionId":"87400",
+											"optionName":"Projector",
+											"optionPrice": 89.90
+										},
+										{
+											"optionId":"32123",
+											"optionName":"Babysitting",
+											"optionPrice": 59.90
+										},
+										{
+											"optionId":"65999",
+											"optionName":"Translator",
+											"optionPrice": 39.90
+										},
 		],
 		"calendarOptions": {
 		"stepHour": 1,
@@ -200,14 +236,21 @@ $(document).ready(function() {
 		}
 	}
 
-	var stepHour = bookingJSON.calendarOptions.stepHour;
+	var stepHour = bookingJSON.calendarOptions.stepHour; 
+	var defaultBookingpricePerSlot = bookingJSON.defaultBookingpricePerSlot;
+	var defaultMinSlotTime = bookingJSON.defaultMinSlotTime;
+	//IMPORTANT NOTE FOR STEPHOUR VALUE: 
+	//Only hour-intervals can be used - using minutes as step will cause this whole thing to fail. Many functions assume that hours are used.
 	var firstSlot = bookingJSON.firstSlot;
 	var lastSlot = bookingJSON.lastSlot;
-	var eventsArray = bookingJSON.eventsArray;
+	var currencySign = bookingJSON.currencySign;
+	var bookingArray = bookingJSON.bookingArray;
 	var bookingTypes = bookingJSON.bookingTypes;
 	var availableRooms = bookingJSON.availableRooms;
 	var bookingCategories = bookingJSON.bookingCategories;
-	var preselRowClassName = "preselectedRow"; //class to add to highlighted room selection
+	var bookingOptions = bookingJSON.bookingOptions;
+	var contactPageUrl = bookingJSON.contactPageUrl;
+	var selRowClassName = "selectedRow"; //class to add to highlighted room selection
 
 
 
@@ -230,7 +273,15 @@ $(document).ready(function() {
 	var roomContainer = $("#roomContainer");
 	var bookingTypeContainer = $("#bookingTypeContainer");
 	var bookingCategoriesDropdown = $("#bookingCategoriesDropdown");
+	var bookingOptionsContainer = $("#optionsContainer");
+	var selectedEventTitle = $("#bookingNameInput");
+	var selectedEventDescription = $("#bookingDescInput");
+	var optionsContainer = $("#optionsContainer");
 
+	var userNameInput = $("#usernameInput");
+	var userOrganizationInput = $("#userOrganizationInput");
+	var userPhoneInput  = $("#userPhoneInput");
+	var userEmailInput = $("#userPhoneInput");
 
 
     var date = new Date();
@@ -265,25 +316,26 @@ $(document).ready(function() {
             right: 'month,agendaWeek,agendaDay'
         },
         ignoreTimezone:true,
-        selectOverlap:false,
+        selectOverlap:true,
         allDaySlot:false,
         minTime: firstSlot,
         maxTime: lastSlot,
         slotDuration:'0'+stepHour+':00:00',
         selectable:true,
         defaultView: 'month',
-        events: eventsArray,
+        events: bookingArray,
         dayClick: function(date) {
                 $('#calendar').fullCalendar('gotoDate', date);
                 $('#calendar').fullCalendar('changeView', 'agendaDay');        
         },
         timeClick: function(){
-        	alert("clicktime")
+        	//alert("clicktime")
         },
         select: function(start,end,jsEvent,view){
-        	console.log(view.name)
         	if(view.name==="agendaDay"){
         		$("#calendar").css('opacity','0.3');
+            	form.calendarArrDate = start.format('YYYY-MM-DD');
+            	form.calendarDepDate = end.format('YYYY-MM-DD');
             	form.show(null,start,end);
         	}
         }
@@ -322,27 +374,49 @@ $(document).ready(function() {
     });
 
 
+    $(confirmBookingBtn).click(function(){
+    	alert("Redirecting to payment form IF 'Guest' or 'NGO with no available hours'. If user is admin the booking is created now. End of booking demo");
+    	$("#calendar").css('opacity','1');
+    	$('.stepForm').fadeOut();
+    	form.resetForm();
+    });
+
     var form ={
 
     	//vars
     	mode : "booking", //never changes for this module
-    	selectedBookingType:"privateBooking",
+    	selectedBookingType:null,
     	state: "1", //default state(view) of form
-    	arrDate:"00:00", //arrival time - selectable on calendar - also displayed on form
-    	depDate:"01:00", //departure time - selectable on form 
-    	steppedUpTime:"01:00", //arr time + step -initial time of departure timepicker
-    	selectedRoomId:"0", //currently selected room
-    	selectedRoomName:"Sample Room",
+    	calendarArrDate:null,
+    	calendarDepDate:null,
+    	arrDate:null, //arrival time - selectable on calendar - also displayed on form
+    	depDate:null, //departure time - selectable on form 
+    	steppedUpTime:null, //arr time + step -initial time of departure timepicker
+    	selectedRoomId:null, //currently selected room
+    	selectedRoomName:null,
+    	selectedEventCategory:null,
+    	selectedEventTitle:null,
+    	selectedEventDescription:null,
+    	selectedOptions:null,
+    	selectedUserName:null,
+    	selectedUserOrganizationName:null,
+    	selectedUserPhoneNumber:null,
+    	selectedUserEmailAddress:null,
+    	selectedOptions:[],
+    	bookingPrice:null,
+    	optionsPrice:null,
+    	totalPrice:null,
     	errHideDelay:3000, //time to show err msg before hiding
 
 
     	//methods
 
     	init: function(){
-
-    		this.appendBookingTypes();
     		this.appendRooms();
+    		this.appendBookingTypes();
     		this.appendBookingCategories();
+    		this.appendOptions();
+
 			window.spinner = new Spinner(spinnerOpts).spin(formSpinner);
 			this.waitForm(false);
 			hideFormBackBtn(true);
@@ -375,11 +449,6 @@ $(document).ready(function() {
     	show : function(stateNum,startDate,endDate){
 
 
-    		$(allRoomRows).remove();
-			this.appendRooms();
-
-
-
     		if(stateNum === null)
     			var stateNum = "1";
 
@@ -394,8 +463,6 @@ $(document).ready(function() {
   			this.steppedUpTime =  endDate.format('H:mm');
   			$(timepicker2).timepicker('setTime',this.steppedUpTime);
 
-  			this.arrDate = startDate.format('YYYY-MM-DD');
-  			this.depDate = endDate.format('YYYY-MM-DD');
 
   			$(headingDateLbl).text(endDate.format('MMMM Do YYYY'));
   			$(headingArrTimeTxt).text(startDate.format('H:mm'));
@@ -418,32 +485,52 @@ $(document).ready(function() {
 			}
 
 
-			console.log(this.state)
     		$(allStates).css('display','none');
     		$(".state"+form.state).slideDown(300);
-
 			switch(this.state) {
 
 				case 1:
 					hideFormBackBtn(true);
 					disableNext(true);
 
+					//data capture for previous state
+					//happens .on click of event-type row
+
+
+				break;
+
 				case 2:
+					waitForm(true);
 					hideFormBackBtn(false);
-					disableNext(true);
+
+
+			        break;
+
 			    case 3:
-					hideFormBackBtn(false);
+			    	waitForm(true);
+			    	disableNext(true);
+			        //data capture of previous state
 			        var finalArrTime = $(timepicker1).val();
 			        var finalDepTime = $(timepicker2).val();
 
-			        this.arrDate = moment(this.arrDate+'T'+finalArrTime).format(); //final save of arrTime in unix time
-			        this.depDate = moment(this.depDate+'T'+finalDepTime).format(); //final save of depTime in unix time
+			        if(finalArrTime.split(":")[0]<10) //timepicker.val gives 9:00 if its 9am, we need 09:00.
+			        	finalArrTime = "0"+finalArrTime;
+			        if(finalDepTime.split(":")[0]<10) //same as above. this doesn't look too good.
+			        	finalDepTime = "0"+finalDepTime;
+
+			        this.arrDate = this.calendarArrDate+'T'+finalArrTime+":00"; //final save of arrTime in ISO8601
+			        this.depDate = this.calendarDepDate+'T'+finalDepTime+":00"; //final save of depTime in ISO8601
+
+			        $(allRoomRows).remove();
+					this.appendRooms();
 
 			        break;
+
 			    case 4:
 
 				   	hideFormBackBtn(false);
-				   	console.log(this.selectedBookingType)
+					disableNext(false);
+
 					if(this.selectedBookingType==="Private Booking"){
 						disableBookingCatDropdown(true);
 					}
@@ -451,6 +538,26 @@ $(document).ready(function() {
 						disableBookingCatDropdown(false);
 					}
 
+				break;
+				case 5:
+					//data capture for previous state
+					disableNext(false);
+					this.selectedEventCategory = $(bookingCategoriesDropdown).val();
+					this.selectedEventTitle = $(selectedEventTitle).val();
+					this.selectedEventDescription = $(selectedEventDescription).val();
+
+					//options capture happens via their click handler - see selectedOptions array property in this object.
+
+					this.calculatePrice();
+
+				break;
+				case 6:
+					this.selectedUserName = $(userNameInput).val();
+			    	this.selectedUserOrganizationName = $(userOrganizationInput).val();
+			    	this.selectedUserPhoneNumber = $(userPhoneInput).val();
+			    	this.selectedUserEmailAddress = $(userEmailInput).val();
+					console.log(JSON.stringify(form));
+					disableNext(true);
 			    break;
 			    default:
 			        console.log('switchState form. method defaulted switch case')
@@ -472,20 +579,14 @@ $(document).ready(function() {
 				var bookingTypeName = bookingTypes[i].bookingTypeName;
 				var bookingTypeDesc = bookingTypes[i].bookingTypeDescription;
 				var bookingTypeImg = bookingTypes[i].bookingTypeImg;
-					if(i===0){
-						activeClass= preselRowClassName;
-					}
-					else{
-						activeClass="";
-					}
 
-				$(bookingTypeContainer).append("<div class='listRow bookingTypeRow "+activeClass+"' data-bookingTypeName='"+bookingTypeName+"''><div class='listRowSnippet bookingTypeRowSnippet' ><img class='listRowThumb bookingTypeRowThumb' src='"+bookingTypeImg+"'/><div class='listRowSnippetTxtContainer bookingTypeSnippetTxtContainer'><div class='listRowSnippetTxtTitle bookingTypeSnippetTxtTitle'>"+bookingTypeName+"</div><div class='listRowSnippetTxtDescription bookingTypeSnippetTxtDescription'>"+bookingTypeDesc+"</div></div></div></div>");
+				$(bookingTypeContainer).append("<div class='listRow bookingTypeRow' data-bookingTypeName='"+bookingTypeName+"''><div class='listRowSnippet bookingTypeRowSnippet'><img class='listRowThumb bookingTypeRowThumb' src='"+bookingTypeImg+"'/><div class='listRowSnippetTxtContainer bookingTypeSnippetTxtContainer'><div class='listRowSnippetTxtTitle bookingTypeSnippetTxtTitle'>"+bookingTypeName+"</div><div class='listRowSnippetTxtDescription bookingTypeSnippetTxtDescription'>"+bookingTypeDesc+"</div></div></div></div>");
 			}
 
 			window.allBookingTypeRows = $('.bookingTypeRow');
 			$('body').on('click', '.bookingTypeRow', function() {
-			   $(allBookingTypeRows).removeClass(preselRowClassName);
-			   $(this).addClass(preselRowClassName);
+			   $(allBookingTypeRows).removeClass(selRowClassName);
+			   $(this).addClass(selRowClassName);
 			   form.selectedBookingType = $(this).attr('data-bookingTypeName');
 			   disableNext(false);
 			});
@@ -504,14 +605,16 @@ $(document).ready(function() {
 				var roomDesc = availableRooms[i].roomDescription;
 				var roomImg = availableRooms[i].roomImg;
 				var roomCapacity = String(availableRooms[i].roomCapacity);
-					if(i===0){
-						activeClass= preselRowClassName;
+				var roomAvailable = determineAvailability(roomId,this.arrDate,this.depDate);
+				var availBadgeSnippet;
+
+					if(roomAvailable){
+						availBadgeSnippet = "<div class='availBadge availableBadge'><span>Available</span></div>"
+					}else{
+						availBadgeSnippet = "<div class='availBadge unavailableBadge'><a href='"+contactPageUrl+"' target='_blank'><span>Contact for availability</span></a></div>"
 					}
-					else{
-						activeClass="";
-					}
-				console.log(activeClass);
-				$(roomContainer).append("<div class='listRow roomRow "+activeClass+"' data-roomId='"+roomId+"' data-roomName='"+roomName+"''><div class='listRowSnippet roomSnippet' ><img class='listRowThumb roomThumb' src='"+roomImg+"'/><div class='listRowSnippetTxtContainer roomSnippetTxtContainer'><div class='listRowSnippetTxtTitle roomSnippetTxtTitle'>"+roomName+"<span class='roomCapacityLbl'>Capacity: </span><span class='roomCapacityTxt'>"+roomCapacity+"</span></div><div class='listRowSnippetTxtDescription roomSnippetTxtDescription'>"+roomDesc+"</div></div></div></div>");
+
+				$(roomContainer).append("<div class='listRow roomRow' data-roomId='"+roomId+"' data-roomName='"+roomName+"''><div class='listRowSnippet roomSnippet' ><img class='listRowThumb roomThumb' src='"+roomImg+"'/><div class='listRowSnippetTxtContainer roomSnippetTxtContainer'><div class='listRowSnippetTxtTitle roomSnippetTxtTitle'>"+roomName+"<span class='roomCapacityLbl'>Capacity: </span><span class='roomCapacityTxt'>"+roomCapacity+"</span></div><div class='listRowSnippetTxtDescription roomSnippetTxtDescription'>"+roomDesc+"</div></div>"+availBadgeSnippet+"</div></div>");
 			}
 
 			this.selectedRoomId = availableRooms[0].roomId;
@@ -519,8 +622,8 @@ $(document).ready(function() {
 
 			window.allRoomRows = $('.roomRow');
 			$('body').on('click', '.roomRow', function() {
-			   $(allRoomRows).removeClass(preselRowClassName);
-			   $(this).addClass(preselRowClassName);
+			   $(allRoomRows).removeClass(selRowClassName);
+			   $(this).addClass(selRowClassName);
 			   form.selectedRoomId = $(this).attr('data-roomId');
 			   form.selectedRoomName = $(this).attr('data-roomName');
 			   disableNext(false);
@@ -532,6 +635,27 @@ $(document).ready(function() {
 			for (var i = 0; i < bookingCategories.length; i++) {
 				var bookingCategoryName = bookingCategories[i].bookingCategoryName;
 				$(bookingCategoriesDropdown).append("<option value='"+bookingCategoryName+"'>"+bookingCategoryName+"</option>");
+			};
+		},
+
+		appendOptions :function(){
+
+			for (var i = 0; i < bookingOptions.length; i++) {
+				var optionId = bookingOptions[i].optionId;
+				var optionName = bookingOptions[i].optionName;
+				var optionPrice = String(bookingOptions[i].optionPrice.toFixed(2));
+				
+				$(bookingOptionsContainer).append("<label for='"+optionName+"'><input type='checkbox' id='"+optionId+"' class='bookOptionCheckbox' name='"+optionName+"' value='"+optionName+"' data-price='"+optionPrice+"' data-optionId='"+optionId+"'/>&nbsp;"+optionName+"<span class='optionPriceTxt'>+ "+currencySign+""+optionPrice+"</span></label><br>");
+				
+				$('body').on('click', '#'+optionId, function() { 
+					var thisId = String($(this).attr('id'));
+					if($(this).is(":checked")){
+						form.selectedOptions.push(thisId);
+					}else{
+						removeItemFromArray(thisId,form.selectedOptions);
+					}
+
+				});
 			};
 		},
 
@@ -564,10 +688,49 @@ $(document).ready(function() {
 				disableNext(false);
 				$(formSpinner).fadeOut();
 			}
+		},
+
+		calculatePrice: function(){
+			//calc duration - NOTE: Only hours can be used here.
+			var pricePerSlot = defaultBookingpricePerSlot; 
+			var minSlotTime = defaultMinSlotTime;
+			var optionsPrice = 0;
+			var arrDateHoursAbs = moment(this.arrDate).format("HH");
+			var depDateHoursAbs = moment(this.depDate).format("HH");
+
+			var duration = parseInt(parseInt(depDateHoursAbs)-parseInt(arrDateHoursAbs));
+			for (var i = 0; i < availableRooms.length; i++) {
+				if(availableRooms[i].roomId===form.selectedRoomId){
+					pricePerSlot = availableRooms[i].pricePerSlot;
+					minSlotTime = defaultMinSlotTime;
+				}
+			};
+			
+			for (var i = 0; i < form.selectedOptions.length; i++) {
+				var optionId= form.selectedOptions[i];
+				for (var i = 0; i < bookingOptions.length; i++) {
+					if(bookingOptions[i].optionId === optionId){
+						optionsPrice = optionsPrice + parseFloat(bookingOptions[i].optionPrice);
+					}
+				};
+			};
+
+			var bookingPrice = null;
+			if ((duration/minSlotTime)<=1){
+				bookingPrice = pricePerSlot;
+			} else{
+				console.log("more than 4 hours", Math.ceil((duration/minSlotTime)));
+				bookingPrice = Math.ceil((duration/minSlotTime))* pricePerSlot; //round up
+			}
+
+			this.bookingPrice = bookingPrice;
+			this.optionsPrice = optionsPrice;
+			this.totalPrice = bookingPrice + optionsPrice;
+
+			console.log("Booking Price: "+this.bookingPrice.toFixed(2));
+			console.log("Options Price: "+this.optionsPrice.toFixed(2));
+			console.log("Total Price: "+ this.totalPrice.toFixed(2));
 		}
-
-
-
 
     }
 
@@ -583,7 +746,9 @@ $(document).ready(function() {
 	    var depTimeAbs = absoluteTime($(this).val());
 	    var openTimeAbs = absoluteTime(firstSlot);
 	    var closeTimeAbs = absoluteTime(lastSlot);
-
+  		
+  		$(headingDepTimeTxt).text($(this).val());
+	    
 	    if(depTimeAbs<=openTimeAbs||depTimeAbs>=(closeTimeAbs+stepHour)||depTimeAbs<=arrTimeAbs){
 	    	$(timepicker2).css('color','red');
 	    	form.showError('Depart time is sooner than arrival');
@@ -599,6 +764,45 @@ $(document).ready(function() {
 
 
 	});
+
+	//takes a string & an array and removes that item from the array
+	function removeItemFromArray(itemName,arr){
+		var itemName = String(itemName);
+		for(var i = arr.length - 1; i >= 0; i--) {
+		    if(arr[i] === itemName) {
+		       arr.splice(i, 1);
+		    }
+		}
+	}
+
+	//returns true if a room is available for a specified start/end time - checks JSON.bookingArray with moment-date-range.js
+	function determineAvailability(roomId,startTime,endTime){
+		var checkFlag = true;
+		for (var i = 0; i < bookingArray.length; i++) {
+			if(bookingArray[i].roomId===roomId){
+
+				var bookingStart = String(bookingArray[i].start);
+				var bookingEnd = String(bookingArray[i].end);
+				var startTime = String(startTime);
+				var endTime = String(endTime);
+
+			
+			if(i===1){
+				console.log(bookingStart);
+				console.log(bookingEnd);
+				console.log(startTime);
+				console.log(endTime);
+			}	
+				
+				var bookingRange = moment().range(bookingStart, bookingEnd);
+				var checkRange = moment().range(startTime, endTime);
+				if(checkRange.overlaps(bookingRange)){
+					checkFlag = false;
+				}
+			}
+		};
+		return checkFlag;
+	}
 
 
 	function disableBookingCatDropdown(bool){
