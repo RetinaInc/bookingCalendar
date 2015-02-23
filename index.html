@@ -243,9 +243,6 @@
         var bookingCategories = bookingJSON.bookingCategories;
         var bookingOptions = bookingJSON.bookingOptions;
         var contactPageUrl = bookingJSON.contactPageUrl;
-        var selRowClassName = "selectedRow"; //class to add to highlighted room selection
-
-
 
 
         //DOM handles
@@ -277,7 +274,6 @@
         var userOrganizationInput = $("#userOrganizationInput");
         var userPhoneInput = $("#userPhoneInput");
         var userEmailInput = $("#userPhoneInput");
-
 
         var date = new Date();
         var d = date.getDate();
@@ -454,8 +450,6 @@
                     .removeAttr('checked')
                     .removeAttr('selected');
 
-                //reset rows with 'selected' class appended to them
-                $(allBookingTypeRows).removeClass(selRowClassName);
             },
 
             showState: function(stateNum) {
@@ -613,8 +607,6 @@
 
                 window.allBookingTypeRows = $('.bookingTypeRow');
                 $('body').off("click",  '.bookingTypeRow').on('click', '.bookingTypeRow', function() { 
-                    $(allBookingTypeRows).removeClass(selRowClassName);
-                    $(this).addClass(selRowClassName);
                     form.selectedBookingType = $(this).attr('data-bookingTypeName');
                     form.switchState('next');
                 });
@@ -650,8 +642,6 @@
 
                 window.allRoomRows = $('.roomRow');
                 $('body').off("click",  '.roomRow').on('click', '.roomRow', function() {
-                    $(allRoomRows).removeClass(selRowClassName);
-                    $(this).addClass(selRowClassName);
                     form.selectedRoomId = $(this).attr('data-roomId');
                     form.selectedRoomName = $(this).attr('data-roomName');
                     $(roomNameTxt).text(this.selectedRoomName);
@@ -848,9 +838,9 @@
 
         function disableNext(bool) {
             if (bool) {
-                $(nextBtn).addClass('formBtnHidden');
+                $(nextBtn).css('visibility','hidden');
             } else {
-                $(nextBtn).removeClass('formBtnHidden');
+                $(nextBtn).css('visibility','visible');
             }
         }
 

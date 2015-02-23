@@ -139,11 +139,6 @@ select{
 	background-color:#F0F0F0;
 }
 
-.selectedRow{
-	background-color:#F0F0F0;
-	color:#eee !important;
-}
-
 
 .listRowSnippet{
 	position:relative;
@@ -310,16 +305,6 @@ select{
 		background-color:#00BCD4;
 		color:#fff;
 	}
-
-	.formBtnDisabled{
-		pointer-events:none;
-		color:#aaa;
-	}
-
-	.formBtnHidden{
-		visibility:hidden;
-	}
-
 
 	#cancelBtn{
 		width:50%;
