@@ -512,6 +512,8 @@
                 }
 
 
+                console.log(this.state);
+
                 $(allStates).css('display', 'none');
                 $(".state" + form.state).slideDown(300);
                 switch (this.state) {
@@ -610,7 +612,7 @@
                 }
 
                 window.allBookingTypeRows = $('.bookingTypeRow');
-                $('body').on('click', '.bookingTypeRow', function() {
+                $('body').off().on('click', '.bookingTypeRow', function() { //why .off().on? see this: http://stackoverflow.com/questions/14969960/jquery-click-events-firing-multiple-times
                     $(allBookingTypeRows).removeClass(selRowClassName);
                     $(this).addClass(selRowClassName);
                     form.selectedBookingType = $(this).attr('data-bookingTypeName');
@@ -647,7 +649,7 @@
                 this.selectedRoomName = availableRooms[0].roomName;
 
                 window.allRoomRows = $('.roomRow');
-                $('body').on('click', '.roomRow', function() {
+                $('body').off().on('click', '.roomRow', function() {
                     $(allRoomRows).removeClass(selRowClassName);
                     $(this).addClass(selRowClassName);
                     form.selectedRoomId = $(this).attr('data-roomId');
@@ -693,7 +695,6 @@
 
                 setTimeout(function() {
                     $(formErrMsg).css('display', 'none');
-                    errUp = false;
                 }, this.errHideDelay);
 
 
