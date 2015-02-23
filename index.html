@@ -467,7 +467,7 @@
                 $(".state" + stateNum).css('display', 'block');
                 $(stepForm).fadeIn();
 
-				disableNext(true);
+				hideNext(true);
 
                 var startTimeFormatted = startDate.format('H:mm');
                 $(timepicker1).timepicker('setTime', startTimeFormatted);
@@ -479,7 +479,7 @@
                 $(headingDateLbl).text(endDate.format('MMMM Do YYYY'));
                 $(headingArrTimeTxt).text(startDate.format('H:mm'));
                 $(headingDepTimeTxt).text(endDate.format('H:mm'));
-                disableNext(true);
+                hideNext(true);
 
             },
             hide: function(){
@@ -506,7 +506,7 @@
                 }
 
 
-                console.log(this.state);
+                this.waitForm(true);
 
                 $(allStates).css('display', 'none');
                 $(".state" + form.state).slideDown(300);
@@ -514,7 +514,7 @@
 
                     case 1:
                         hideFormBackBtn(true);
-                        disableNext(true);
+                        hideNext(true);
             			this.resetForm();
                         //data capture for previous state
                         //happens .on click of event-type row
@@ -524,13 +524,13 @@
 
                     case 2:
 
-                    	disableNext(false);
+                    	hideNext(false);
                         hideFormBackBtn(false);
 
                         break;
 
                     case 3:
-                        disableNext(true);
+                        hideNext(true);
                         //data capture of previous state
                         var finalArrTime = $(timepicker1).val();
                         var finalDepTime = $(timepicker2).val();
@@ -551,7 +551,7 @@
                     case 4:
 
                         hideFormBackBtn(false);
-                        disableNext(false);
+                        hideNext(false);
 
                         if (this.selectedBookingType === "Private Booking") {
                             disableBookingCatDropdown(true);
@@ -563,7 +563,7 @@
                         break;
                     case 5:
                         //data capture for previous state
-                        disableNext(false);
+                        hideNext(false);
                         this.selectedEventCategory = $(bookingCategoriesDropdown).val();
                         this.selectedEventTitle = $(selectedEventTitle).val();
                         this.selectedEventDescription = $(selectedEventDescription).val();
@@ -579,7 +579,7 @@
                         this.selectedUserPhoneNumber = $(userPhoneInput).val();
                         this.selectedUserEmailAddress = $(userEmailInput).val();
                         console.log(JSON.stringify(form));
-                        disableNext(true);
+                        hideNext(true);
                         break;
                     default:
                         console.log('switchState form. method defaulted switch case')
@@ -694,16 +694,16 @@
             waitForm: function(bool) {
                 if (bool) {
                     $(stepForm).css('pointer-events', 'none');
-                    disableNext(true);
+                    hideNext(true);
                     $(formSpinner).fadeIn();
                     setTimeout(function() {
                         $(stepForm).css('pointer-events', 'all');
-                        disableNext(false);
+                        hideNext(false);
                         $(formSpinner).fadeOut();
                     }, 2000);
                 } else {
                     $(stepForm).css('pointer-events', 'all');
-                    disableNext(false);
+                    hideNext(false);
                     $(formSpinner).fadeOut();
                 }
             },
@@ -770,10 +770,10 @@
             if (depTimeAbs <= openTimeAbs || depTimeAbs >= (closeTimeAbs + stepHour) || depTimeAbs <= arrTimeAbs) {
                 $(timepicker2).css('color', 'red');
                 form.showError('Depart time is sooner than arrival');
-                disableNext(true);
+                hideNext(true);
             } else {
                 $(timepicker2).css('color', origColorTimepickerColor);
-                disableNext(false);
+                hideNext(false);
             }
 
             if (depTimeAbs >= (closeTimeAbs + stepHour)) {
@@ -836,7 +836,7 @@
         }
 
 
-        function disableNext(bool) {
+        function hideNext(bool) {
             if (bool) {
                 $(nextBtn).css('visibility','hidden');
             } else {
