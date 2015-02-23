@@ -316,6 +316,10 @@ select{
 		color:#aaa;
 	}
 
+	.formBtnHidden{
+		visibility:hidden;
+	}
+
 
 	#cancelBtn{
 		width:50%;

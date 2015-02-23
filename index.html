@@ -527,6 +527,8 @@
                         break;
 
                     case 2:
+
+                    	disableNext(false);
                         hideFormBackBtn(false);
 
                         break;
@@ -612,7 +614,7 @@
                     $(allBookingTypeRows).removeClass(selRowClassName);
                     $(this).addClass(selRowClassName);
                     form.selectedBookingType = $(this).attr('data-bookingTypeName');
-                    disableNext(false);
+                    form.switchState('next');
                 });
             },
 
@@ -650,8 +652,9 @@
                     $(this).addClass(selRowClassName);
                     form.selectedRoomId = $(this).attr('data-roomId');
                     form.selectedRoomName = $(this).attr('data-roomName');
-                    disableNext(false);
                     $(roomNameTxt).text(this.selectedRoomName);
+
+                    form.switchState('next');
                 });
             },
 
@@ -789,6 +792,7 @@
 
         });
 
+
         //takes a string & an array and removes that item from the array
         function removeItemFromArray(itemName, arr) {
             var itemName = String(itemName);
@@ -843,9 +847,9 @@
 
         function disableNext(bool) {
             if (bool) {
-                $(nextBtn).addClass('formBtnDisabled');
+                $(nextBtn).addClass('formBtnHidden');
             } else {
-                $(nextBtn).removeClass('formBtnDisabled');
+                $(nextBtn).removeClass('formBtnHidden');
             }
         }
 
