@@ -154,6 +154,11 @@
                 "start": "2015-02-15T11:00:00",
                 "end": "2015-02-15T12:00:00",
                 "roomId": "1111"
+            },{
+                "title": "DRT Works Booking",
+                "start": "2015-02-15T14:00:00",
+                "end": "2015-02-15T16:00:00",
+                "roomId": "2222"
             }, {
                 "title": "Private Booking",
                 "start": "2015-02-15T14:00:00",
@@ -247,6 +252,8 @@
         var stepForm = $("#stepForm");
         var allStates = $(".state");
 
+        var calendar = $("#calendar");
+
         var formBackBtn = $("#formBackBtn");
         var nextBtn = $("#nextBtn");
         var cancelBtn = $("#cancelBtn");
@@ -303,7 +310,11 @@
                 center: 'title',
                 right: 'month,agendaWeek,agendaDay'
             },
+             lang: 'en',
+		    eventLimit: 2, // If you set a number it will hide the itens
+		    eventLimitText: "More",
             ignoreTimezone: true,
+            selectHelper: true,
             selectOverlap: true,
             allDaySlot: false,
             minTime: firstSlot,
@@ -318,10 +329,16 @@
             },
             timeClick: function() {
                 //alert("clicktime")
-            },
+            },eventRender: function (event, element) {
+			    $(element).css('pointer-events','none');
+			},
             select: function(start, end, jsEvent, view) {
                 if (view.name === "agendaDay") {
-                    $("#calendar").css('opacity', '0.3');
+                               
+		            $(calendar).css({
+					   'opacity' : '0.3',
+					   'pointer-events' : 'none'
+					});
                     form.calendarArrDate = start.format('YYYY-MM-DD');
                     form.calendarDepDate = end.format('YYYY-MM-DD');
                     form.show(null, start, end);
@@ -348,9 +365,11 @@
 
 
         $(cancelBtn).click(function() {
-            $("#calendar").css('opacity', '1');
-            $('.stepForm').fadeOut();
-            form.resetForm();
+            $(calendar).css({
+			   'opacity' : '1.0',
+			   'pointer-events' : 'all'
+			});
+            form.hide();
         });
 
         $(nextBtn).click(function() {
@@ -366,7 +385,6 @@
             alert("Redirecting to payment form IF 'Guest' or 'NGO with no available hours'. If user is admin the booking is created now. End of booking demo");
             $("#calendar").css('opacity', '1');
             $('.stepForm').fadeOut();
-            form.resetForm();
         });
 
         var form = {
@@ -374,7 +392,7 @@
             //vars
             mode: "booking", //never changes for this module
             selectedBookingType: null,
-            state: "1", //default state(view) of form
+            state: 1, //default state(view) of form
             calendarArrDate: null,
             calendarDepDate: null,
             arrDate: null, //arrival time - selectable on calendar - also displayed on form
@@ -409,23 +427,12 @@
                 hideFormBackBtn(true);
             },
 
-            resetState: function() {
-                $(stepForm).fadeOut(200, function() {
-                    $(allStates).css('display', 'none');
-                    $('.state' + this.state).css('display', 'block');
-                });
-            },
-
             resetForm: function() {
 
             	//reset object's K/V pairs
-                this.state = "1";
+                this.state = 1;
                 this.mode = "booking";
                 this.selectedBookingType = null;
-                this.calendarArrDate = null;
-                this.calendarDepDate = null;
-                this.arrDate = null;
-                this.depDate = null;
                 this.steppedUpTime = null;
                 this.selectedRoomId = null;
                 this.selectedRoomName = null;
@@ -442,13 +449,13 @@
 	            this.totalPrice = null;
 
 	            //uncheck all checkboxes, clear all inputs
-                $('#stepForm input').not(':button, :submit, :reset')
+                $('#stepForm input').not(':button, :submit, :reset, #timepicker1, #timepicker2')
                     .val('')
                     .removeAttr('checked')
                     .removeAttr('selected');
 
-                //reset the state, is this necessary since we are resetting the state var above?
-                this.resetState();
+                //reset rows with 'selected' class appended to them
+                $(allBookingTypeRows).removeClass(selRowClassName);
             },
 
             showState: function(stateNum) {
@@ -466,6 +473,7 @@
                 $(".state" + stateNum).css('display', 'block');
                 $(stepForm).fadeIn();
 
+				disableNext(true);
 
                 var startTimeFormatted = startDate.format('H:mm');
                 $(timepicker1).timepicker('setTime', startTimeFormatted);
@@ -479,6 +487,15 @@
                 $(headingDepTimeTxt).text(endDate.format('H:mm'));
                 disableNext(true);
 
+            },
+            hide: function(){
+
+            	this.resetForm();	
+
+                $(stepForm).fadeOut(200, function() {
+                    $(allStates).css('display', 'none');
+                    $('.state' + this.state).css('display', 'block');
+                });
             },
 
             switchState: function(direction) {
@@ -502,7 +519,7 @@
                     case 1:
                         hideFormBackBtn(true);
                         disableNext(true);
-
+            			this.resetForm();
                         //data capture for previous state
                         //happens .on click of event-type row
 
