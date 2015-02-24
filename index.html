@@ -306,7 +306,11 @@
                 center: 'title',
                 right: 'month,agendaWeek'
             },
-             lang: 'en',
+            selectConstraint:{
+            	start: firstSlot, // a start time (10am in this example)
+   				 end: lastSlot
+            },
+            lang: 'en',
 		    eventLimit: 2, // If you set a number it will hide the itens
 		    eventLimitText: "More",
             ignoreTimezone: true,
