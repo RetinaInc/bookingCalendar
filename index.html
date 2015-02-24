@@ -304,7 +304,7 @@
             header: {
                 left: 'prev,next today',
                 center: 'title',
-                right: 'month,agendaWeek,agendaDay'
+                right: 'month,agendaWeek'
             },
              lang: 'en',
 		    eventLimit: 2, // If you set a number it will hide the itens
@@ -317,11 +317,11 @@
             maxTime: lastSlot,
             slotDuration: '0' + stepHour + ':00:00',
             selectable: true,
-            defaultView: 'month',
+            defaultView: 'agendaWeek',
             events: bookingArray,
             dayClick: function(date) {
                 $('#calendar').fullCalendar('gotoDate', date);
-                $('#calendar').fullCalendar('changeView', 'agendaDay');
+                $('#calendar').fullCalendar('changeView', 'agendaWeek');
             },
             timeClick: function() {
                 //alert("clicktime")
@@ -329,7 +329,7 @@
 			    $(element).css('pointer-events','none');
 			},
             select: function(start, end, jsEvent, view) {
-                if (view.name === "agendaDay") {
+                if (view.name === "agendaWeek") {
                                
 		            $(calendar).css({
 					   'opacity' : '0.3',
