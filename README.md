@@ -17,7 +17,7 @@ Functions, in their normal sense, are kept to a minimum and they primarily exist
 
 ### Validations:
 
-## Room fetch
+#### Room fetch
 * Is room content-type bookable? - A boolean value exists within the content-type(only bookable rooms should be fetched).
 
 ####Nicholas Kyriakides for Opium Works Digital LTD
