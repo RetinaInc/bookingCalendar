@@ -20,4 +20,11 @@ Functions, in their normal sense, are kept to a minimum and they primarily exist
 #### Room fetch
 * Is room content-type bookable? - A boolean value exists within the content-type(only bookable rooms should be fetched).
 
+
+
+## Validations:
+
+#### Book now buttons within Single-View rooms
+* Module should handle incoming parameters from URL, and load that room immediately for booking - url param is 'roomNid' and it should come by clicking the 'Book Now' button from within a Single-View Room content type
+
 ####Nicholas Kyriakides for Opium Works Digital LTD
